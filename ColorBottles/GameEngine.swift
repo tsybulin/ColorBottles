@@ -22,6 +22,8 @@ class GameEngine {
     private var bottles : [Int : GameBottle] = [:]
     private var stack : [Move] = []
     
+    var auto = false
+    
     init(with scene: GameScene) {
         self.scene = scene
     }
@@ -156,15 +158,18 @@ class GameEngine {
         bottle.deselect()
     }
     
-    private func select(bottle : GameBottle) {
+    private func select(bottle : GameBottle) -> Bool {
         guard !bottle.isEmpty() else {
             self.scene.run(SKAction.playSoundFileNamed("fail.wav", waitForCompletion: false))
-            return
+            return false
         }
         
         if bottle.trySelect() {
             self.scene.run(SKAction.playSoundFileNamed("select.wav", waitForCompletion: false))
+            return true
         }
+        
+        return false
     }
     
     private func isSolved() -> Bool {
@@ -214,7 +219,26 @@ class GameEngine {
         }
 
 
-        self.select(bottle: bottle)
+        if !self.select(bottle: bottle) {
+            return
+        }
+        
+        guard self.auto else {
+            return
+        }
+        
+        let clr = bottle.topColor()
+        var bs : [GameBottle] = []
+        
+        for b in self.bottles.values {
+            if b != bottle && !b.isEmpty() && !b.isFull() && b.topColor() == clr {
+                bs.append(b)
+            }
+        }
+        
+        if bs.count == 1 {
+            self.bottleClick(bottle: bs[0])
+        }
     }
     
 }

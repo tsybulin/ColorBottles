@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     var boardNode : SKNode?
     var levelNode : SKLabelNode?
+    var autoNode : SKLabelNode?
     var engine : GameEngine?
     private var lvl = 0
     private let fg = UIImpactFeedbackGenerator(style: .light)
@@ -19,9 +20,11 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         self.boardNode = self.childNode(withName: "board")
         self.levelNode = self.childNode(withName: "top")?.childNode(withName: "level") as? SKLabelNode
+        self.autoNode = self.childNode(withName: "bottom")?.childNode(withName: "auto") as? SKLabelNode
         self.engine = GameEngine(with: self)
         self.lvl = UserDefaults.standard.integer(forKey: "last_level")
         self.levelNode?.text = "Level \(self.lvl)"
+        self.autoNode?.text = self.engine?.auto ?? false ? "A" : "M"
         self.engine?.startLevel(lvl: self.lvl)
         self.fg.prepare()
     }
@@ -54,6 +57,13 @@ class GameScene: SKScene {
             self.fg.impactOccurred()
             self.fg.prepare()
             self.engine?.rollback()
+            return
+        }
+
+        if node.name == "auto" {
+            self.fg.impactOccurred()
+            self.engine?.auto = !(self.engine?.auto ?? true)
+            self.autoNode?.text = self.engine?.auto ?? false ? "A" : "M"
             return
         }
 
