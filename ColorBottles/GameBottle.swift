@@ -39,13 +39,8 @@ class GameBottle : SKNode {
         self.id = bottle.id
         self.name = "bottle_\(bottle.id)"
         
-        for (j, clr) in bottle.blocks.enumerated() {
-            let block = ColorBlock(with: clr)
-            block.name = "block\(j)"
-            block.position.y = BLOCK_BOTTOM_Y + Double(j) * BLOCK_HEGHT
-            block.zPosition = 1
-            self.blocks.append(block)
-            self.addChild(block)
+        for clr in bottle.blocks {
+            self.push(block: ColorBlock(with: clr))
         }
         
         let btl = SKSpriteNode(imageNamed: "bottle")
