@@ -64,8 +64,26 @@ class GameBottle : SKNode {
         self.blocks[3].waterColor == self.blocks[0].waterColor
     }
     
-    func blockCount() -> Int {
-        return self.blocks.count
+    func pushable() -> Int {
+        return 4 - self.blocks.count
+    }
+    
+    func popable() -> Int {
+        guard !self.isEmpty() else {
+            return 0
+        }
+        
+        var result = 0
+        let clr = self.topColor()
+        for i in (0..<self.blocks.count).reversed() {
+            if self.blocks[i].waterColor == clr {
+                result += 1
+                continue
+            }
+            break
+        }
+        
+        return result
     }
     
     func isSelected() -> Bool {
@@ -102,7 +120,7 @@ class GameBottle : SKNode {
     }
     
     func push(block : ColorBlock) {
-        guard self.blockCount() < 4 else {
+        guard !self.isFull() else {
             return
         }
         
@@ -121,6 +139,7 @@ class ColorBlock : SKSpriteNode {
     convenience init(with waterColor: String) {
         self.init(imageNamed: waterColor)
         self.waterColor = waterColor
+        self.zPosition = 1
     }
     
 }

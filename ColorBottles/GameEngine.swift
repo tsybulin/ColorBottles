@@ -231,7 +231,7 @@ class GameEngine {
         var bs : [GameBottle] = []
         
         for b in self.bottles.values {
-            if b != bottle && !b.isEmpty() && !b.isFull() && b.topColor() == clr {
+            if b != bottle && !b.isEmpty() && !b.isFull() && b.topColor() == clr && bottle.popable() <= b.pushable() {
                 bs.append(b)
             }
         }
