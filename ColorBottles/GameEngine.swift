@@ -182,12 +182,16 @@ class GameEngine {
         return solved
     }
     
+    var locked = false
+    
     func bottleClick(bottle : GameBottle) {
         if let selectedBottle =  self.bottles.values.first(where: {$0.isSelected()}) {
             if selectedBottle == bottle {
                 self.deselect(bottle: selectedBottle)
                 return
             }
+
+            self.locked = true
 
             self.pour(from: selectedBottle, to: bottle) {
                 self.deselect(bottle: selectedBottle)
@@ -202,6 +206,8 @@ class GameEngine {
                         self.scene.boardNode?.alpha = 1.0
                     })
                 }
+
+                self.locked = false
             }
 
             return

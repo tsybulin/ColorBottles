@@ -30,6 +30,10 @@ class GameScene: SKScene {
     }
     
     func touchDown(atPoint pos : CGPoint) {
+        guard !(self.engine?.locked ?? false) else {
+            return
+        }
+        
         let node = self.atPoint(pos)
 
         if node.name == "back" {
