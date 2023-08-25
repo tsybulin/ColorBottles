@@ -27,6 +27,19 @@ class GameScene: SKScene {
         self.autoNode?.text = self.engine?.auto ?? false ? "A" : "M"
         self.engine?.startLevel(lvl: self.lvl)
         self.fg.prepare()
+        
+        self.showOptions()
+    }
+    
+    private func showOptions() {
+        let top = self.childNode(withName: "top")
+        let bottom = self.childNode(withName: "bottom")
+        top?.isHidden = false
+        bottom?.isHidden = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            top?.isHidden = true
+            bottom?.isHidden = true
+        }
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -35,6 +48,11 @@ class GameScene: SKScene {
         }
         
         let node = self.atPoint(pos)
+        
+        if node.name == "board" || node.name == "Scene" {
+            self.showOptions()
+            return
+        }
 
         if node.name == "back" {
             self.fg.impactOccurred()
@@ -90,6 +108,7 @@ class GameScene: SKScene {
         UserDefaults.standard.set(self.lvl, forKey: "last_level")
         
         self.levelNode?.text = "Level \(self.lvl)"
+        self.showOptions()
         self.engine?.startLevel(lvl: self.lvl)
     }
     
