@@ -244,7 +244,14 @@ class GameEngine {
         
         if bs.count == 1 {
             self.bottleClick(bottle: bs[0])
+            return
+        } else if bs.count == 0 {
+            for b in self.bottles.values {
+                if b.isEmpty() {
+                    self.bottleClick(bottle: b)
+                    break
+                }
+            }
         }
     }
-    
 }
